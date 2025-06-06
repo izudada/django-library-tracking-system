@@ -44,7 +44,7 @@ services:
 
   celery-beat:
     build: .
-    command: celery -A project_name beat --loglevel=info
+    command: celery -A library_system beat --loglevel=info
     volumes:
       - .:/code
     env_file:

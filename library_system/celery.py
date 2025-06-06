@@ -10,7 +10,7 @@ app.autodiscover_tasks()
 app.conf.beat_scheduler = 'django_celery_beat.schedulers:DatabaseScheduler'
 app.conf.beat_schedule = {
     "run-overdue-loan-reminder": {
-        "task": "task.period_task_reminder",
-        "schedule": crontab(hour=9, minute=30),
+        "task": "task.check_overdue_loans",
+        "schedule": crontab(minute='*'),  # runs every minute
     },
 }

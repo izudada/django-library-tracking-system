@@ -1,5 +1,6 @@
-from datetime import  timedelta
+from datetime import timedelta
 
+from django.utils import timezone
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -49,5 +50,8 @@ class Loan(models.Model):
         return f"{self.book.title} loaned to {self.member.user.username}"
     
     def save(self, *args, **kwargs):
-        self.due_date = self.loan_date.date() + timedelta(days=14)
-        super(Loan, self).save(*args, **kwargs)
+        if not self.loan_date:
+            self.loan_date = timezone.now().date()
+        if not self.due_date:
+            self.due_date = self.loan_date + timedelta(days=14)
+        super().save(*args, **kwargs)

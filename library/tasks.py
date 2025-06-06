@@ -21,7 +21,7 @@ def send_loan_notification(loan_id):
     except Loan.DoesNotExist:
         pass
 
-@shared_task(name="task.period_task_reminder")
+@shared_task(name="task.check_overdue_loans")
 def check_overdue_loans():
     overdue_loans = Loan.objects.filter(is_returned=False, due_date__gte=now())
     if overdue_loans:
