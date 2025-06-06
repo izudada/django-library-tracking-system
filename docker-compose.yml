@@ -10,12 +10,13 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5435:5435"
+    restart: unless-stopped
 
   redis:
     image: redis:6
     ports:
-      - "6379:6379"
+      - "6370:6370"
 
   web:
     build: .
@@ -30,7 +31,7 @@ services:
       - db
       - redis
 
-  celery:
+  celery-worker:
     build: .
     command: celery -A library_system worker -l info
     volumes:
@@ -40,6 +41,24 @@ services:
     depends_on:
       - web
       - redis
+
+  celery-beat:
+    build: .
+    command: celery -A project_name beat --loglevel=info
+    volumes:
+      - .:/code
+    env_file:
+      - .env
+    depends_on:
+      - web
+      - redis
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    restart: always
+    ports:
+      - 1024:1024
+      - 8024:8024
 
 volumes:
   postgres_data:
